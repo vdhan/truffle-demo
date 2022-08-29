@@ -1,1 +1,1 @@
-# truffle-demo
+# Truffle suite demo (Solidity)
