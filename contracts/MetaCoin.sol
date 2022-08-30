@@ -25,8 +25,7 @@ abstract contract Context {
         return payable(msg.sender);
     }
 
-    function _msgData() internal view returns (bytes memory) {
-        this; /// @dev should remove this?
+    function _msgData() internal pure returns (bytes memory) {
         return msg.data;
     }
 }
@@ -68,7 +67,7 @@ abstract contract Ownable is Context {
     }
 }
 
-contract MetaCoin is Context, IBEP20, Ownable {
+contract MetaCoin is IBEP20, Ownable {
     using SafeMath for uint;
 
     string private _name;
