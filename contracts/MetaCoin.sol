@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 import "./SafeMath.sol";
 
 interface IBEP20 {
-    function totalSupply() external view returns (uint);
-    function decimals() external view returns (uint8);
-    function symbol() external view returns (string memory);
     function name() external view returns (string memory);
+    function symbol() external view returns (string memory);
+    function decimals() external view returns (uint8);
+    function totalSupply() external view returns (uint);
     function getOwner() external view returns (address);
 
     function balanceOf(address account) external view returns (uint);
@@ -28,6 +28,7 @@ contract Context {
     }
 
     function _msgData() internal view returns (bytes memory) {
+        /** @dev should remove this? */
         this; // silence warning
         return msg.data;
     }
@@ -50,10 +51,6 @@ contract Ownable is Context {
         emit OwnershipTransferred(address(0), msgSender);
     }
 
-    function owner() public view returns (address) {
-        return _owner;
-    }
-
     function renounceOwnership() public onlyOwner {
         emit OwnershipTransferred(_owner, address(0));
         _owner = address(0);
@@ -61,6 +58,10 @@ contract Ownable is Context {
 
     function transferOwnership(address newOwner) public onlyOwner {
         _transferOwnership(newOwner);
+    }
+
+    function owner() public view returns (address) {
+        return _owner;
     }
 
     function _transferOwnership(address newOwner) internal {
@@ -71,28 +72,65 @@ contract Ownable is Context {
     }
 }
 
-// contract MetaCoin {
-//     constructor() {
-//         balances[tx.origin] = 10000;
-//     }
+contract MetaCoin is Context, IBEP20, Ownable {
+    using SafeMath for uint;
 
-//     mapping (address => uint) balances;
+    string private _name;
+    string private _symbol;
+    uint8 private _decimals;
+    uint private _totalSupply;
 
-//     event Transfer(address indexed _from, address indexed _to, uint _value);
+    mapping(address => uint) private _balances;
+    mapping(address => mapping(address => uint)) private _allowances;
 
-//     function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
-//         if (balances[msg.sender] < amount) return false;
-//         balances[msg.sender] -= amount;
-//         balances[receiver] += amount;
-//         emit Transfer(msg.sender, receiver, amount);
-//         return true;
-//     }
+    /** @dev update here for new token */
+    constructor() public {
+        _name = "Truffle Token";
+        _symbol = "TFTK";
+        _decimals = 8;
+        _totalSupply = 100000000000000;
 
-//     function getBalanceInEth(address addr) public view returns(uint){
-//         return ConvertLib.convert(getBalance(addr),2);
-//     }
+        _balances[msg.sender] = _totalSupply;
+        emit Transfer(address(0), msg.sender, _totalSupply);
+    }
 
-//     function getBalance(address addr) public view returns(uint) {
-//         return balances[addr];
-//     }
-// }
+    function name() external view returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view returns (uint8) {
+        return _decimals;
+    }
+
+    function totalSupply() external view returns (uint) {
+        return _totalSupply;
+    }
+
+    function getOwner() external view returns (address) {
+        return owner();
+    }
+
+    function balanceOf(address account) external view returns (uint) {
+        return _balances[account];
+    }
+
+    // function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
+    //     if (balances[msg.sender] < amount) return false;
+    //     balances[msg.sender] -= amount;
+    //     balances[receiver] += amount;
+    //     emit Transfer(msg.sender, receiver, amount);
+    //     return true;
+    // }
+
+    // function getBalanceInEth(address addr) public view returns(uint){
+    //     return ConvertLib.convert(getBalance(addr),2);
+    // }
+
+    // function getBalance(address addr) public view returns(uint) {
+    //     return balances[addr];
+    // }
+}
