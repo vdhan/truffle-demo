@@ -22,9 +22,8 @@
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const fs = require('fs');
 
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const { mnemonic, BscScan} = require('./env.json');
 
 module.exports = {
   /**
@@ -36,6 +35,11 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+
+  plugins: ['truffle-plugin-verify'],
+  api_keys: {
+    bscscan: BscScan
+  },
 
   networks: {
     // Useful for testing. The `development` name is special - truffle uses it by default
@@ -53,9 +57,10 @@ module.exports = {
     testnet: {
       provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
       network_id: 97,
-      confirmations: 10,
+      confirmations: 5,
       timeoutBlocks: 200,
-      skipDryRun: true
+      skipDryRun: true,
+      production: true
     },
 
     bsc: {
@@ -63,13 +68,14 @@ module.exports = {
       network_id: 56,
       confirmations: 10,
       timeoutBlocks: 200,
-      skipDryRun: true
+      skipDryRun: true,
+      production: true
     },
   },
 
   // Set default mocha options here, use special reporters etc.
   mocha: {
-    // timeout: 100000
+    timeout: 100000
   },
 
   // Configure your compilers
