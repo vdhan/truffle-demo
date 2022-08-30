@@ -28,8 +28,7 @@ contract Context {
     }
 
     function _msgData() internal view returns (bytes memory) {
-        /** @dev should remove this? */
-        this; // silence warning
+        this; /// @dev should remove this?
         return msg.data;
     }
 }
@@ -47,7 +46,6 @@ contract Ownable is Context {
     constructor() internal {
         address msgSender = _msgSender();
         _owner = msgSender;
-
         emit OwnershipTransferred(address(0), msgSender);
     }
 
@@ -83,7 +81,7 @@ contract MetaCoin is Context, IBEP20, Ownable {
     mapping(address => uint) private _balances;
     mapping(address => mapping(address => uint)) private _allowances;
 
-    /** @dev update here for new token */
+    /// @dev update here for new token
     constructor() public {
         _name = "Truffle Token";
         _symbol = "TFTK";
@@ -118,19 +116,93 @@ contract MetaCoin is Context, IBEP20, Ownable {
         return _balances[account];
     }
 
-    // function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
-    //     if (balances[msg.sender] < amount) return false;
-    //     balances[msg.sender] -= amount;
-    //     balances[receiver] += amount;
-    //     emit Transfer(msg.sender, receiver, amount);
-    //     return true;
-    // }
+    function transfer(address recipient, uint amount) external returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
 
-    // function getBalanceInEth(address addr) public view returns(uint){
-    //     return ConvertLib.convert(getBalance(addr),2);
-    // }
+    function allowance(address owner, address spender) external view returns (uint) {
+        return _allowances[owner][spender];
+    }
 
-    // function getBalance(address addr) public view returns(uint) {
-    //     return balances[addr];
-    // }
+    function transferFrom(address sender, address recipient, uint amount) external returns (bool) {
+        address payable msgSender = _msgSender();
+
+        _transfer(sender, recipient, amount);
+        _approve(sender, msgSender, _allowances[sender][msgSender].sub(
+            amount,
+            "BEP20: transfer amount exceeds allowance")
+        );
+
+        return true;
+    }
+
+    function approve(address spender, uint amount) external returns (bool) {
+        _approve(_msgSender(), spender, amount);
+        return true;
+    }
+
+    function increaseAllowance(address spender, uint addedValue) public returns (bool) {
+        address payable msgSender = _msgSender();
+        _approve(msgSender, spender, _allowances[msgSender][spender].add(addedValue));
+        return true;
+    }
+
+    function decreaseAllowance(address spender, uint subtractedValue) public returns (bool) {
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(
+            subtractedValue,
+            "BEP20: decreased allowance below 0")
+        );
+
+        return true;
+    }
+
+    // increase total supply
+    function mint(uint amount) public onlyOwner returns (bool) {
+        _mint(_msgSender(), amount);
+        return true;
+    }
+
+    function _mint(address account, uint amount) internal {
+        require(account != address(0), "BEP20: mint to zero address");
+
+        _totalSupply = _totalSupply.add(amount);
+        _balances[account] = _balances[account].add(amount);
+
+        emit Transfer(address(0), account, amount);
+    }
+
+    function _transfer(address sender, address recipient, uint amount) internal {
+        require(sender != address(0), "BEP20: transfer from zero address");
+        require(recipient != address(0), "BEP20: transfer to zero address");
+
+        _balances[sender] = _balances[sender].sub(amount, "BEP20: transfer amount exceeds balance");
+        _balances[recipient] = _balances[recipient].add(amount);
+
+        emit Transfer(sender, recipient, amount);
+    }
+
+    function _approve(address owner, address spender, uint amount) internal {
+        require(owner != address(0), "BEP20: approve from zero address");
+        require(spender != address(0), "BEP20: approve to zero address");
+
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
+    }
+
+    function _burn(address account, uint amount) internal {
+        require(account != address(0), "BEP20: burn from zero address");
+
+        _balances[account] = _balances[account].sub(amount, "BEP20: burn amount exceeds balance");
+        _totalSupply = _totalSupply.sub(amount);
+
+        emit Transfer(account, address(0), amount);
+    }
+
+    function _burnFrom(address account, uint amount) internal {
+        address payable msgSender = _msgSender();
+
+        _burn(account, amount);
+        _approve(account, msgSender, _allowances[account][msgSender].sub(amount, "BEP20: burn amount exceeds allowance"));
+    }
 }
