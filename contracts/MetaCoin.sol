@@ -20,11 +20,9 @@ interface IBEP20 {
     event Approval(address indexed owner, address indexed spender, uint value);
 }
 
-contract Context {
-    constructor() internal {}
-
+abstract contract Context {
     function _msgSender() internal view returns (address payable) {
-        return msg.sender;
+        return payable(msg.sender);
     }
 
     function _msgData() internal view returns (bytes memory) {
@@ -33,7 +31,7 @@ contract Context {
     }
 }
 
-contract Ownable is Context {
+abstract contract Ownable is Context {
     address private _owner;
 
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
@@ -43,7 +41,7 @@ contract Ownable is Context {
         _;
     }
 
-    constructor() internal {
+    constructor() {
         address msgSender = _msgSender();
         _owner = msgSender;
         emit OwnershipTransferred(address(0), msgSender);
@@ -82,7 +80,7 @@ contract MetaCoin is Context, IBEP20, Ownable {
     mapping(address => mapping(address => uint)) private _allowances;
 
     /// @dev update here for new token
-    constructor() public {
+    constructor() {
         _name = "Truffle Token";
         _symbol = "TFTK";
         _decimals = 8;
