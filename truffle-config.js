@@ -1,18 +1,15 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-const { mnemonic, bscScan} = require('./env.json');
+const {mnemonic} = require('./env.json');
 
 module.exports = {
   plugins: ['truffle-plugin-verify'],
-  api_keys: {
-    bscscan: bscScan
-  },
 
   networks: {
     development: {
-     host: "127.0.0.1",
-     port: 8545,
-     network_id: "*",
+      host: '127.0.0.1',
+      port: 8545,
+      network_id: '*',
     },
 
     testnet: {
@@ -34,13 +31,9 @@ module.exports = {
     },
   },
 
-  mocha: {
-    timeout: 20000
-  },
-
   compilers: {
     solc: {
-      version: "0.8.16",
+      version: '0.8.16',
       settings: {
         optimizer: {
           enabled: true
