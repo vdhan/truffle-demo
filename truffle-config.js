@@ -1,6 +1,5 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-
-const {mnemonic} = require('./env.json');
+const {mnemonic, alchemy} = require('./env.json');
 
 module.exports = {
   plugins: ['truffle-plugin-verify'],
@@ -13,15 +12,13 @@ module.exports = {
     },
 
     testnet: {
-      provider: () => new HDWalletProvider(mnemonic, `https://data-seed-prebsc-1-s1.binance.org:8545`),
-      network_id: 97,
-      confirmations: 5,
-      timeoutBlocks: 200,
+      provider: () => new HDWalletProvider(mnemonic, `https://eth-goerli.g.alchemy.com/v2/${alchemy}`),
+      network_id: 5,
       skipDryRun: true,
-      production: true
+      confirmations: 5
     },
 
-    bsc: {
+    mainnet: {
       provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed1.binance.org`),
       network_id: 56,
       confirmations: 10,
