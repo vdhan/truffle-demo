@@ -17,7 +17,7 @@ npx truffle console --network development
 npx truffle exec --network development scripts/index.js
 ```
 
-Deploy testnet
+Deploy & upgrade testnet
 
 ```shell
 npx truffle migrate --network testnet
@@ -26,6 +26,8 @@ npx truffle console --network testnet
 
 Address: 0x97a644C6dE4302F91E85406e0c80107b8d72f909
 
+Verify contract
+
 ```shell
-truffle run verify BEP20Token@{contract-address} --network testnet
+truffle run verify ERC20Token@{contract-address} --network testnet
 ```

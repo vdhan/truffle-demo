@@ -12,6 +12,7 @@
         "@openzeppelin/truffle-upgrades": "^1.16.0",
         "@truffle/hdwallet-provider": "^2.0.14",
         "chai": "^4.3.6",
+        "eth-gas-reporter": "^0.2.25",
         "ganache": "^7.4.1",
         "truffle": "^5.5.28",
         "truffle-plugin-verify": "^0.5.28"

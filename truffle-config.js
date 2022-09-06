@@ -1,8 +1,11 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-const {mnemonic, alchemy} = require('./env.json');
+const {mnemonic, alchemy, etherscan, coinMarketCap} = require('./env.json');
 
 module.exports = {
   plugins: ['truffle-plugin-verify'],
+  api_keys: {
+    etherscan: etherscan
+  },
 
   networks: {
     development: {
@@ -21,10 +24,7 @@ module.exports = {
     mainnet: {
       provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed1.binance.org`),
       network_id: 56,
-      confirmations: 10,
-      timeoutBlocks: 200,
-      skipDryRun: true,
-      production: true
+      skipDryRun: true
     },
   },
 
@@ -36,6 +36,15 @@ module.exports = {
           enabled: true
         }
       }
+    }
+  },
+
+  mocha: {
+    reporter: 'eth-gas-reporter',
+    reporterOptions: {
+      currency: 'VND',
+      token: 'ETH',
+      coinmarketcap: coinMarketCap
     }
   }
 };
