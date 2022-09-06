@@ -24,10 +24,10 @@ npx truffle migrate --network testnet
 npx truffle console --network testnet
 ```
 
-Address: 0x97a644C6dE4302F91E85406e0c80107b8d72f909
+Address: 0x3b0c224538e323616Ba25344E3eDF81c9B71f014
 
 Verify contract
 
 ```shell
-truffle run verify ERC20Token@{contract-address} --network testnet
+npx truffle run verify ERC20Token@{contract-address} --network testnet
 ```

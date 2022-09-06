@@ -22,8 +22,8 @@ module.exports = {
     },
 
     mainnet: {
-      provider: () => new HDWalletProvider(mnemonic, `https://bsc-dataseed1.binance.org`),
-      network_id: 56,
+      provider: () => new HDWalletProvider(mnemonic, `https://eth-mainnet.g.alchemy.com/v2/${alchemy}`),
+      network_id: 1,
       skipDryRun: true
     },
   },
