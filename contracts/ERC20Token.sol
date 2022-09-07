@@ -42,13 +42,9 @@ contract ERC20Token is Initializable, ERC20Upgradeable, OwnableUpgradeable, ERC2
         return 8;
     }
 
-    function _beforeTokenTransfer(address from, address to, uint amount)
-        internal
-        whenNotPaused
-        override
-    {
+    function _beforeTokenTransfer(address from, address to, uint amount) internal override whenNotPaused {
         super._beforeTokenTransfer(from, to, amount);
     }
 
-    function _authorizeUpgrade(address) internal onlyOwner override {}
+    function _authorizeUpgrade(address) internal override onlyOwner {}
 }

@@ -1,42 +1,51 @@
 const {expect} = require('chai');
-const {BN} = require('@openzeppelin/test-helpers');
+const {expectEvent, expectRevert, constants} = require('@openzeppelin/test-helpers');
 const {deployProxy} = require('@openzeppelin/truffle-upgrades');
-const Contract = artifacts.require('ERC20Token');
+const Token = artifacts.require('ERC20Token');
 
 contract('ERC20 Token', function ([owner, addr1, addr2]) {
   beforeEach(async function () {
-    this.coin = await deployProxy(Contract, {owner, kind: 'uups'});
+    this.token = await deployProxy(Token, {owner, kind: 'uups'});
   });
 
-  it('Should put coins in the first account', async function () {
-    const amount = new BN(1000000000000000000n);
-    expect(await this.coin.balanceOf(owner)).to.be.bignumber.equal(amount);
+  it("Should put coins in owner's account", async function () {
+    const amount = 1000000000000000000n;
+
+    expect(BigInt(await this.token.balanceOf(owner))).to.equal(amount);
+    expect(BigInt(await this.token.totalSupply())).to.equal(amount);
   });
 
   it('Should send coin directly', async function () {
-    const amount = new BN(2000);
-    let balance1start = await this.coin.balanceOf(owner);
-    let balance2start = await this.coin.balanceOf(addr1);
-    balance1start = (balance1start - amount).toString();
-    balance2start = (balance2start + amount).toString();
+    const amount = 2000n;
+    const fromBalance = BigInt(await this.token.balanceOf(owner));
+    const toBalance = BigInt(await this.token.balanceOf(addr1));
 
-    await this.coin.transfer(addr1, amount);
+    await this.token.transfer(addr1, amount);
 
-    expect(await this.coin.balanceOf(owner)).to.be.bignumber.equal(balance1start);
-    expect(await this.coin.balanceOf(addr1)).to.be.bignumber.equal(balance2start);
+    expect(BigInt(await this.token.balanceOf(owner))).to.equal(fromBalance - amount);
+    expect(BigInt(await this.token.balanceOf(addr1))).to.equal(toBalance + amount);
   });
 
   it('Should send coin correctly', async function () {
-    const amount = new BN(1000);
-    let balance1start = await this.coin.balanceOf(owner);
-    let balance2start = await this.coin.balanceOf(addr2);
-    balance1start = (balance1start - amount).toString();
-    balance2start = (balance2start + amount).toString();
+    const amount = 1000n;
+    const fromBalance = BigInt(await this.token.balanceOf(owner));
+    const toBalance = BigInt(await this.token.balanceOf(addr2));
 
-    await this.coin.increaseAllowance(owner, 5000);
-    await this.coin.transferFrom(owner, addr2, amount);
+    await this.token.increaseAllowance(owner, 5000);
+    await this.token.transferFrom(owner, addr2, amount);
 
-    expect(await this.coin.balanceOf(owner)).to.be.bignumber.equal(balance1start);
-    expect(await this.coin.balanceOf(addr2)).to.be.bignumber.equal(balance2start);
+    expect(BigInt(await this.token.balanceOf(owner))).to.equal(fromBalance - amount);
+    expect(BigInt(await this.token.balanceOf(addr2))).to.equal(toBalance + amount);
+  });
+
+  it('Mint emits an event', async function () {
+    const amount = '1000';
+    const mint = await this.token.mint(addr1, amount);
+
+    expectEvent(mint, 'Transfer', {from: constants.ZERO_ADDRESS, to: addr1, value: amount});
+  });
+
+  it('Non owner can not mint', async function () {
+    expectRevert.unspecified(this.token.mint(addr1, '1000', {from: addr2}));
   });
 });
