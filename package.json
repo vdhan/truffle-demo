@@ -4,10 +4,8 @@
     "description": "Smart contract with truffle suite framework",
     "author": "Vũ Đắc Hoàng Ân",
     "license": "GPL-3.0-or-later",
-    "dependencies": {
-        "@openzeppelin/contracts-upgradeable": "^4.7.3"
-    },
     "devDependencies": {
+        "@openzeppelin/contracts-upgradeable": "^4.7.3",
         "@openzeppelin/test-helpers": "^0.5.16",
         "@openzeppelin/truffle-upgrades": "^1.16.0",
         "@truffle/hdwallet-provider": "^2.0.14",

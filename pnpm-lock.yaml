@@ -9,10 +9,8 @@ specifiers:
   truffle: ^5.5.28
   truffle-plugin-verify: ^0.5.28
 
-dependencies:
-  '@openzeppelin/contracts-upgradeable': 4.7.3
-
 devDependencies:
+  '@openzeppelin/contracts-upgradeable': 4.7.3
   '@openzeppelin/test-helpers': 0.5.16
   '@openzeppelin/truffle-upgrades': 1.16.0_truffle@5.5.29
   '@truffle/hdwallet-provider': 2.0.14
@@ -750,7 +748,7 @@ packages:
 
   /@openzeppelin/contracts-upgradeable/4.7.3:
     resolution: {integrity: sha512-+wuegAMaLcZnLCJIvrVUDzA9z/Wp93f0Dla/4jJvIhijRrPabjQbZe6fWiECLaJyfn5ci9fqf9vTw3xpQOad2A==}
-    dev: false
+    dev: true
 
   /@openzeppelin/test-helpers/0.5.16:
     resolution: {integrity: sha512-T1EvspSfH1qQO/sgGlskLfYVBbqzJR23SZzYl/6B2JnT4EhThcI85UpvDk0BkLWKaDScQTabGHt4GzHW+3SfZg==}
