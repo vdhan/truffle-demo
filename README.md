@@ -5,16 +5,16 @@
 ```shell
 pnpm install
 npx truffle compile
-npx ganache
+npx truffle develop
 ```
 
 Open other terminal tab
 
 ```shell
-npx truffle migrate --network development
+npx truffle migrate
 npx truffle test
-npx truffle console --network development
-npx truffle exec --network development scripts/index.js
+npx truffle console
+npx truffle exec scripts/index.js
 ```
 
 Deploy & upgrade testnet
