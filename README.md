@@ -11,10 +11,10 @@ npx truffle develop
 Open other terminal tab
 
 ```shell
-npx truffle migrate
-npx truffle test
-npx truffle console
-npx truffle exec scripts/index.js
+npx truffle migrate --network develop
+npx truffle test --network develop
+npx truffle console --network develop
+npx truffle exec scripts/index.js --network develop
 ```
 
 Deploy & upgrade testnet
